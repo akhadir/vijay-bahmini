@@ -283,6 +283,24 @@
 
 // ── Data & config ─────────────────────────────────────────────
 const QUIZ = JSON.parse(document.getElementById('quiz-data').textContent.trim());
+
+// ── Randomize correct answer position on every load (dynamic) ─────
+function shuffleArray(arr){
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+QUIZ.sections.forEach(s => {
+  s.questions.forEach(q => {
+    const correctText = q.options[q.correctIndex];
+    shuffleArray(q.options);
+    q.correctIndex = q.options.indexOf(correctText);
+  });
+});
+
 const params = new URLSearchParams(location.search);
 const cfg = {
   secs: parseTimerSecs(),                 // 0 = no timer (unlimited); ?secs=N (2-60) restores a timer
